@@ -1,32 +1,28 @@
-# Google Cloud SDK - minimized - multi-arch
+# GCloud, Kubectl, Helm - minimized & multi-arch
 
-Yes. Minimized & Multi-Arch - using Alpine! - for your basic CI/CD needs.
-
-## The pain:
-```
-[kamran@kworkhorse ~]$ docker images | grep 'google/cloud-sdk'
-google/cloud-sdk                       latest                     00307be05fcd        2 weeks ago         2.41GB
-[kamran@kworkhorse ~]$ 
-```
-
-**2.4 GB! Just for gcloud and kubectl?** 
-
-We could definitely do better.
-
-## The solution:
-```
-[kamran@kworkhorse ~]$ docker images | grep 'praqma/gcp-tools'
-praqma/gcp-tools                       latest                     349531cde907        16 seconds ago      484MB
-[kamran@kworkhorse ~]$ 
-```
-
-This is at least five times smaller than the painful one!
+Yes. **Minimized** & **Multi-Arch** - based on Alpine Linux! Serves your basic CI/CD needs.
 
 ## Features:
-* Multi-Arch - linux/386,linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
-* gcloud - latest - `316.*.*`
-* kubectl - only *one* binary with latest version - `1.15`
-* helm - latest - `v3.*.*`
+* **Multi-Arch** - `linux/386,linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x`
+* **docker** - latest - `19.03`
+* **docker-credential-gcloud** 
+* **gcloud** - latest - `316.*.*`
+* **gsutil** - latest - `4.54`
+* **git-credential-gcloud**
+* **kubectl** - only *one* binary with latest version - `1.15`
+* **helm** - latest - `v3.*.*`
 * Standard unix tools normally included in Alpine OS - `3.12`
 
-Most people use `docker` in an independent CI job - using Docker's official container image, so `docker` is not part of this image. 
+
+## How small is this image?
+```
+[kamran@kworkhorse ~]$ docker images | grep 'gcp-tools'
+praqma/gcp-tools                       latest                     9e8a15b1c846        17 seconds ago      546MB
+[kamran@kworkhorse ~]$ 
+```
+
+This is about five times smaller than `google/cloud-sdk` which is `2.4 GB` in size!
+
+**Note:** I could have taken out the `docker` binary too, reducing the image further by about `60 MB`, but I left it in there.
+
+*Enjoy!*
