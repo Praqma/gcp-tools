@@ -1,6 +1,12 @@
-# Google Cloud SDK - minimized - multi-arch
+# GCloud, Kubectl, Helm - minimized & multi-arch
+
+Yes. **Minimized** & **Multi-Arch** - based on Alpine Linux! Serves your basic CI/CD needs.
 
 More and more people are moving their setup to various cloud providers, and have started to use CI/CD to build/test/.../deploy their applications. Most of the time the target deployment platform is Kubernetes. Naturally your CI/CD job needs to talk to various components of these systems. 
+
+If you are deploying your applications to Google Kubernetes Engine (GKE), then most certainly you are using `google/cloud-sdk` container image in your CI jobs.
+
+So what is the problem? 
 
 ## The pain:
 ```
@@ -9,7 +15,7 @@ google/cloud-sdk                       latest                     00307be05fcd  
 [kamran@kworkhorse ~]$ 
 ```
 
-As you can see, the above image is **2.4 GB!** . Most of the time we are only using `gcloud` and `kubectl` out of this humongous image. Downloading `2.4 GB` may not mean much to some, but it does mean a lot to others. I am running a `gitlab-runner` on my home server, and downloading a **"2.4 GB"** image for every job is a huge strain on my internet link. 
+As you can see, the `google/cloud-sdk` container image is **2.4 GB!**, whereas most of the time we are only using `gcloud` and `kubectl` out of this humongous image. Downloading `2.4 GB` may not mean much to many, but it does mean *a lot* to others. For example, I am running a `gitlab-runner` on my home server; and downloading a **"2.4 GB"** image for every job (cache aside) is a huge strain on my internet link. It also means my job has to wait for the amount of time it takes to be downloaded before it is used. 
 
 So, I thought, I could do better.
 
@@ -24,23 +30,27 @@ local/google-cloud-sdk                 alpine                     b6bcfee1f959  
 So from `2.4 GB` down to `1.7 GB`. Still not a huge gain. I needed to do even better. 
 
 ## The solution:
-I redesigned my solution. This time, I took Alpine version of Google's SDK, and in it, I installed the stuff I needed, removed the stuff which I did not need, created a multi-stage build and only copied the stuff I needed from the previous layer to the final layer of the container image, and threw away everything else. 
+I took Alpine version of Google's SDK, and in it, I installed the stuff I needed, removed the stuff which I did not need, created a multi-stage build and only copied the stuff I needed from the previous layer to the final layer of the container image, and threw away everything else. 
 
 The result was very satisfying. Have a look yourself:
 
 ```
 [kamran@kworkhorse ~]$ docker images | grep 'praqma/gcp-tools'
-praqma/gcp-tools                       latest                     349531cde907        16 seconds ago      484MB
+praqma/gcp-tools                       latest                     9e8a15b1c846        17 seconds ago      546MB
 [kamran@kworkhorse ~]$ 
 ```
 
-This is at least five times smaller than the painful one! Finally! Hurray!
+This is at least five times smaller than the painful one! Finally! Hurray! 
 
 ## Features:
-* **Multi-Arch** - linux/386,linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
-* **gcloud** - latest - `316.*.*`
-* **kubectl** - only *one* binary with latest version - `1.15`
-* **helm** - latest - `v3.*.*`
+* Multi-Arch - linux/386,linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
+* docker - latest - `19.03`
+* docker-credential-gcloud 
+* gcloud - latest - `316.*.*`
+* gsutil - latest - `4.54`
+* git-credential-gcloud
+* kubectl - only *one* binary with latest version - `1.15`
+* helm - latest - `v3.*.*`
 * Standard unix tools normally included in Alpine OS - `3.12`
 
 **Note:** Most people use `docker` in an independent CI job - using Docker's official container image, so `docker` is not part of this image. 
