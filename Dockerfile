@@ -5,7 +5,7 @@ ENV HELM_VERSION v3.4.0
 RUN     apk update && apk add curl openssl \
     &&  gcloud components install kubectl -q  \
     &&  rm -fr /var/cache/apk/* \
-               /google-cloud-sdk/bin/anthoscli  /google-cloud-sdk/bin/kubectl.1.* \
+               /google-cloud-sdk/bin/anthoscli  /google-cloud-sdk/bin/kubectl.* \
                /google-cloud-sdk/bin/bq /google-cloud-sdk/.install/.backup \
     &&  curl -s https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh \
     &&  chmod +x get_helm.sh \
