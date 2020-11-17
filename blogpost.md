@@ -52,5 +52,4 @@ This is at least five times smaller than the painful one! Finally! Hurray!
 * kubectl - only *one* binary with latest version - `1.15`
 * helm - latest - `v3.*.*`
 * Standard unix tools normally included in Alpine OS - `3.12`
-
-**Note:** Most people use `docker` in an independent CI job - using Docker's official container image, so `docker` is not part of this image. 
+ 
